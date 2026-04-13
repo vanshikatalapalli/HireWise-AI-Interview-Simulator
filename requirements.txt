@@ -1,0 +1,8 @@
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+PyMySQL==1.1.1
+textblob==0.18.0.post0
+nltk==3.9.1
+spacy==3.7.5
+PyPDF2==3.0.1
+opencv-python==4.10.0.84
