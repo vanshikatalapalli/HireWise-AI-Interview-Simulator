@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Signup{% endblock %}
+{% block content %}
+<section class="auth-center-wrap">
+    <article class="auth-panel auth-panel-focus">
+        <p class="eyebrow">CREATE ACCOUNT</p>
+        <h2>Create Your Account</h2>
+        <p class="subtle">Start your first interview in under a minute.</p>
+        <form method="POST" class="form-grid auth-form">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Choose username" required>
+            <label>Email</label>
+            <input type="email" name="email" placeholder="you@example.com" required>
+            <label>Password</label>
+            <div class="password-wrap">
+                <input id="signup-password" type="password" name="password" placeholder="Create password" required>
+                <button class="password-toggle" type="button" data-target="signup-password">Show</button>
+            </div>
+            <button class="btn primary auth-main-btn" type="submit">Create Account</button>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    </article>
+</section>
+{% endblock %}
