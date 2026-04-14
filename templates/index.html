@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Welcome | HireWise{% endblock %}
+{% block content %}
+<section class="hero">
+    <div>
+        <h1>HireWise - AI Interview Simulator</h1>
+        <p>Practice HR, Technical, and Mixed interviews with adaptive difficulty, instant NLP feedback, resume-based personalization, and hiring probability insights.</p>
+        <div class="hero-actions">
+            <a class="btn primary" href="{{ url_for('signup') }}">Create Account</a>
+            <a class="btn ghost" href="{{ url_for('login') }}">Login</a>
+        </div>
+        <div class="hero-chips">
+            <span>Adaptive Questions</span>
+            <span>Voice + Text Answers</span>
+            <span>Hire Probability Score</span>
+        </div>
+    </div>
+    <div class="hero-card">
+        <h3>What You Get</h3>
+        <ul>
+            <li>Dynamic question generation with interviewer personalities</li>
+            <li>Answer scoring for relevance, confidence, clarity, and completeness</li>
+            <li>Filler word and think-time analysis with practical tips</li>
+            <li>Progress tracking, points, levels, and achievement badges</li>
+        </ul>
+    </div>
+</section>
+
+<section class="grid cards-3 landing-metrics">
+    <article class="card">
+        <h3>Interview Modes</h3>
+        <p class="metric">3</p>
+        <small>HR, Technical, Mixed</small>
+    </article>
+    <article class="card">
+        <h3>AI Analysis</h3>
+        <p class="metric">6+</p>
+        <small>Relevance, confidence, grammar, clarity, completeness, fillers</small>
+    </article>
+    <article class="card">
+        <h3>Gamification</h3>
+        <p class="metric">100%</p>
+        <small>Points, levels, badges, progress history</small>
+    </article>
+</section>
+
+<section class="card cta-band">
+    <h3>Build Real Interview Confidence</h3>
+    <p>Get detailed feedback after every answer and track measurable improvement across sessions.</p>
+    <a class="btn primary" href="{{ url_for('signup') }}">Start Practicing</a>
+</section>
+{% endblock %}
