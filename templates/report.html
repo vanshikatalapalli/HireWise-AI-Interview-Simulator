@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Final Report{% endblock %}
+{% block content %}
+<section class="card">
+    <h2>Interview Report</h2>
+    <div class="grid cards-3">
+        <div class="metric-box"><strong>Final Score</strong><span>{{ interview_session.total_score }}%</span></div>
+        <div class="metric-box"><strong>Hire Probability</strong><span>{{ interview_session.hire_probability }}%</span></div>
+        <div class="metric-box"><strong>Interview Type</strong><span>{{ interview_session.interview_type|capitalize }}</span></div>
+    </div>
+</section>
+
+<section class="grid cards-3">
+    <article class="card">
+        <h3>Strengths</h3>
+        <ul>
+            {% for item in strengths %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </article>
+    <article class="card">
+        <h3>Weaknesses</h3>
+        <ul>
+            {% for item in weaknesses %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </article>
+    <article class="card">
+        <h3>Improvement Tips</h3>
+        <ul>
+            {% for item in suggestions %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </article>
+</section>
+
+<section class="grid cards-2">
+    <article class="card dna-card">
+        <h3>Interview DNA Profile</h3>
+        <p class="dna-archetype">{{ dna_profile.archetype }}</p>
+        <p class="subtle">{{ dna_profile.summary }}</p>
+        <div class="dna-bars">
+            {% for dim in dna_profile.dimensions %}
+            <div class="dna-row">
+                <div class="dna-head">
+                    <span>{{ dim.label }}</span>
+                    <strong>{{ dim.score }}%</strong>
+                </div>
+                <div class="dna-track"><span style="width: {{ dim.score }}%"></span></div>
+            </div>
+            {% endfor %}
+        </div>
+        {% if dna_profile.traits %}
+        <ul>
+            {% for trait in dna_profile.traits %}
+                <li>{{ trait }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </article>
+
+    <article class="card heatmap-card">
+        <h3>Skill Gap Heatmap</h3>
+        <p class="subtle">Higher gap means higher improvement priority.</p>
+        <div class="heatmap-list">
+            {% for row in skill_gap_heatmap %}
+            <div class="heat-row heat-{{ row.level }}">
+                <div>
+                    <strong>{{ row.skill }}</strong>
+                    <p>Score {{ row.score }}% • Gap {{ row.gap }}%</p>
+                </div>
+                <div class="heat-track">
+                    <span style="width: {{ row.gap }}%"></span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+
+<section class="card">
+    <h3>Question-by-Question Breakdown</h3>
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Question</th>
+            <th>Overall</th>
+            <th>Relevance</th>
+            <th>Confidence</th>
+            <th>Filler</th>
+            <th>Think Time</th>
+        </tr>
+        {% for row in detailed_rows %}
+        {% set r = row.response %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td class="full-question-cell">{{ r.question_text }}</td>
+            <td>{{ r.overall_score }}%</td>
+            <td>{{ r.relevance_score }}%</td>
+            <td>{{ r.sentiment_score }}%</td>
+            <td>{{ r.filler_count }}</td>
+            <td>{{ r.think_time }}s</td>
+        </tr>
+        <tr class="rewrite-row">
+            <td></td>
+            <td colspan="6">
+                <p><strong>Your Answer:</strong> {{ r.user_answer }}</p>
+                <p><strong>Model Answer:</strong> {{ r.ideal_answer }}</p>
+                <p><strong>Answer Rewrite Coach:</strong>
+                    {% if row.feedback.get('rewrite_coach') %}
+                        {{ row.feedback.get('rewrite_coach', {}).get('improved_answer', 'No rewrite available yet.') }}
+                    {% else %}
+                        No rewrite available yet.
+                    {% endif %}
+                </p>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}
