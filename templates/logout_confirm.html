@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Confirm Logout{% endblock %}
+{% block content %}
+<section class="card auth-card" style="max-width:520px;">
+    <h2>Confirm Logout</h2>
+    <p class="subtle">Do you want to logout from HireWise?</p>
+    <form method="POST" class="row" style="margin-top:14px;">
+        <button class="btn primary" type="submit" name="action" value="logout">Yes, Logout</button>
+        <button class="btn ghost" type="submit" name="action" value="cancel">Cancel</button>
+    </form>
+</section>
+{% endblock %}
