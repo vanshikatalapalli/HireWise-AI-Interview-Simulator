@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Start Interview{% endblock %}
+{% block content %}
+<section class="card start-card">
+    <h3 class="start-form-title">Interview Setup</h3>
+    <p class="start-subtitle">Set your preferences and launch a role-based mock interview.</p>
+    <form method="POST" enctype="multipart/form-data" class="form-grid start-form">
+        <div class="form-block">
+            <label>Career Field</label>
+            <input type="hidden" name="profession" id="profession-select" required>
+            <div class="role-picker" id="role-picker">
+                <button type="button" class="role-picker-toggle" id="role-picker-toggle" aria-expanded="false">
+                    <span id="role-picker-label">Choose your field</span>
+                    <span class="role-picker-caret">&#9662;</span>
+                </button>
+                <div class="role-picker-menu hidden" id="role-picker-menu">
+                    <input type="text" class="role-picker-search" id="role-picker-search" placeholder="Search field...">
+                    <div class="role-picker-list" id="role-picker-list">
+                        <p class="role-picker-group">Technical</p>
+                        {% for role in profession_groups["technical"] %}
+                            <button type="button" class="role-picker-option" data-role-option data-value="{{ role }}">{{ role.title() }}</button>
+                        {% endfor %}
+                        <p class="role-picker-group">HR</p>
+                        {% for role in profession_groups["hr"] %}
+                            <button type="button" class="role-picker-option" data-role-option data-value="{{ role }}">{{ role.title() }}</button>
+                        {% endfor %}
+                        <p class="role-picker-group">Mixed</p>
+                        {% for role in profession_groups["mixed"] %}
+                            <button type="button" class="role-picker-option" data-role-option data-value="{{ role }}">{{ role.title() }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <small class="field-hint">Pick the closest role from the list.</small>
+            <label>Other Field (if not listed)</label>
+            <input type="text" name="custom_profession" id="custom-profession" placeholder="Type your field here">
+            <small class="field-hint">Interview type is auto-selected from selected or typed role (HR / Technical / Mixed).</small>
+        </div>
+
+        <div class="form-block two-col">
+            <h4>Preferences</h4>
+            <div>
+                <label>AI Interviewer Personality</label>
+                <select name="personality" class="enhance-select">
+                    <option value="friendly">Friendly</option>
+                    <option value="strict">Strict</option>
+                    <option value="technical">Technical</option>
+                </select>
+            </div>
+            <div>
+                <label>Language</label>
+                <select name="language" class="enhance-select">
+                    <option value="en" selected>English</option>
+                    <option value="hi">Hindi</option>
+                </select>
+            </div>
+            <div>
+                <label>Total Questions</label>
+                <input type="number" name="total_questions" min="3" max="12" value="6">
+            </div>
+            <div>
+                <label>Upload Resume (optional .txt/.pdf)</label>
+                <div class="resume-upload">
+                    <input type="file" id="resume-input" name="resume" accept=".txt,.pdf" class="hidden-file-input">
+                    <button type="button" class="btn ghost file-trigger" id="file-trigger">Choose Resume</button>
+                    <span id="file-name" class="file-name">No file selected</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn primary" type="submit">Start Interview</button>
+    </form>
+</section>
+{% endblock %}
