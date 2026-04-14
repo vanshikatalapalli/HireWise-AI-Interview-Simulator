@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+{% block content %}
+<section class="grid cards-4 history-insights">
+    <article class="card">
+        <small>Total Sessions</small>
+        <p class="metric">{{ total }}</p>
+    </article>
+    <article class="card">
+        <small>Last 30 Days</small>
+        <p class="metric">{{ last_30_count }}</p>
+    </article>
+    <article class="card">
+        <small>Most Used Interviewer</small>
+        <p class="metric">{{ most_used_personality }}</p>
+    </article>
+    <article class="card">
+        <small>Avg Questions Answered</small>
+        <p class="metric">{{ avg_questions_answered }}</p>
+    </article>
+</section>
+
+{% if history_skill_gaps %}
+<section class="card">
+    <h3>Skill Gap Heatmap (All Sessions)</h3>
+    <p class="subtle">Your top recurring improvement zones from interview history.</p>
+    <div class="heatmap-list compact">
+        {% for row in history_skill_gaps %}
+        <div class="heat-row heat-{{ row.level }}">
+            <div>
+                <strong>{{ row.skill }}</strong>
+                <p>Score {{ row.score }}% • Gap {{ row.gap }}%</p>
+            </div>
+            <div class="heat-track">
+                <span style="width: {{ row.gap }}%"></span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section class="card">
+    <div class="card-head">
+        <h2>Interview Archive</h2>
+        <a class="btn ghost" href="{{ url_for('start_interview') }}">Start New Interview</a>
+    </div>
+    {% if sessions %}
+        <div class="history-table-wrap">
+            <table class="history-table">
+                <tr>
+                    <th>Date</th>
+                    <th>Interview Type</th>
+                    <th>Interviewer</th>
+                    <th>Score</th>
+                    <th>Hire %</th>
+                    <th>Questions</th>
+                    <th>Action</th>
+                </tr>
+                {% for s in sessions %}
+                <tr>
+                    <td>{{ s.end_time.strftime('%d %b %Y') }}</td>
+                    <td>{{ s.interview_type|capitalize }}</td>
+                    <td>{{ s.personality|capitalize }}</td>
+                    <td><span class="pill">Score {{ s.total_score }}%</span></td>
+                    <td><span class="pill">Hire {{ s.hire_probability }}%</span></td>
+                    <td>{{ s.total_questions }}</td>
+                    <td><a class="btn ghost" href="{{ url_for('report', session_id=s.id) }}">View Report</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+        <div class="history-empty">
+            <h3>No Completed Interviews Yet</h3>
+            <p>Start your first mock interview to build progress insights here.</p>
+            <a class="btn primary" href="{{ url_for('start_interview') }}">Start Interview</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
