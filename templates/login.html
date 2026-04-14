@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<section class="auth-center-wrap">
+    <article class="auth-panel auth-panel-focus">
+        <p class="eyebrow">WELCOME BACK</p>
+        <h2>Login to HireWise</h2>
+        <p class="subtle">Pick up where you left off.</p>
+        <form method="POST" class="form-grid auth-form">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="you@example.com" required>
+            <label>Password</label>
+            <div class="password-wrap">
+                <input id="login-password" type="password" name="password" placeholder="Enter password" required>
+                <button class="password-toggle" type="button" data-target="login-password">Show</button>
+            </div>
+            <button class="btn primary auth-main-btn" type="submit">Login</button>
+        </form>
+        <p class="auth-switch">New user? <a href="{{ url_for('signup') }}">Create account</a></p>
+    </article>
+</section>
+{% endblock %}
