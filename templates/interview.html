@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Interview{% endblock %}
+{% block content %}
+<section class="interview-layout">
+<section class="card">
+    <div class="card-head">
+        <h2>{{ interview_session.interview_type|capitalize }} Interview</h2>
+        <div class="meta-row">
+            <span class="pill">{{ interview_session.personality|capitalize }} AI</span>
+            <span class="pill timer-pill">Elapsed: <strong id="interview-elapsed">00:00</strong></span>
+            <span class="pill timer-pill">Question Time: <strong id="question-countdown">02:00</strong></span>
+        </div>
+    </div>
+    <div class="progress-bar">
+        <span style="width: {{ (progress / total_questions) * 100 }}%"></span>
+    </div>
+    <p>Question {{ progress + 1 }} of {{ total_questions }}</p>
+
+    <div class="question-box">
+        <p class="prompt">{{ question.personality_prompt }}</p>
+        <h3>{{ question.display_question }}</h3>
+        <div class="meta-row">
+            <span class="pill">Difficulty: {{ question.difficulty }}</span>
+            <span class="pill">Type: {{ question.type }}</span>
+        </div>
+    </div>
+
+    <form method="POST" id="answer-form" class="form-grid">
+        <input type="hidden" name="think_time" id="think_time" value="0">
+        <label>Your Answer</label>
+        <textarea name="answer" id="answer-input" rows="6" required></textarea>
+        <div class="row">
+            <button class="btn ghost" type="button" id="voice-btn">Start Voice Input</button>
+            <button class="btn primary" type="submit">Submit Answer</button>
+        </div>
+        <small id="voice-status"></small>
+    </form>
+</section>
+
+<aside class="card camera-panel">
+    <h3>Confidence Camera</h3>
+    <p class="subtle">Keep your face visible and posture steady while answering.</p>
+    <button class="btn ghost" type="button" id="camera-btn">Analyze Confidence</button>
+    <small id="camera-status"></small>
+    <video id="camera-preview" autoplay playsinline class="camera-preview hidden"></video>
+    <canvas id="capture-canvas" class="hidden"></canvas>
+</aside>
+</section>
+
+{% if feedback %}
+<section class="card feedback">
+    <h3>Detailed Feedback</h3>
+    <div class="grid cards-3">
+        <div class="metric-box"><strong>Overall</strong><span>{{ feedback.overall_score }}%</span></div>
+        <div class="metric-box"><strong>Relevance</strong><span>{{ feedback.relevance_score }}%</span></div>
+        <div class="metric-box"><strong>Confidence</strong><span>{{ feedback.confidence_score }}%</span></div>
+        <div class="metric-box"><strong>Clarity</strong><span>{{ feedback.clarity_score }}%</span></div>
+        <div class="metric-box"><strong>Completeness</strong><span>{{ feedback.completeness_score }}%</span></div>
+        <div class="metric-box"><strong>Filler Count</strong><span>{{ feedback.filler_word_count }}</span></div>
+    </div>
+
+    <h4>Strengths</h4>
+    <ul>
+        {% for s in feedback.strengths %}
+            <li>{{ s }}</li>
+        {% endfor %}
+    </ul>
+
+    <h4>Weaknesses</h4>
+    <ul>
+        {% for w in feedback.weaknesses %}
+            <li>{{ w }}</li>
+        {% endfor %}
+    </ul>
+
+    <h4>Suggestions</h4>
+    <ul>
+        {% for tip in feedback.suggestions %}
+            <li>{{ tip }}</li>
+        {% endfor %}
+    </ul>
+
+    <h4>Grammar Suggestion</h4>
+    <p>{{ feedback.grammar_suggestion }}</p>
+
+    <h4>Model Answer (Reference)</h4>
+    <p>{{ feedback.model_answer }}</p>
+
+    {% if feedback.rewrite_coach %}
+    <div class="rewrite-coach">
+        <h4>Answer Rewrite Coach</h4>
+        <p class="subtle">A stronger version of your answer based on interviewer expectations.</p>
+        <blockquote>{{ feedback.rewrite_coach.improved_answer }}</blockquote>
+        {% if feedback.rewrite_coach.missing_keywords %}
+            <p><strong>Missing keywords:</strong> {{ feedback.rewrite_coach.missing_keywords|join(', ') }}</p>
+        {% endif %}
+        {% if feedback.rewrite_coach.coach_tips %}
+            <ul>
+                {% for tip in feedback.rewrite_coach.coach_tips %}
+                    <li>{{ tip }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.interviewContext = { confidenceApi: "{{ url_for('confidence_api') }}" };
+</script>
+<script src="{{ url_for('static', filename='js/interview.js', v='20260407-1') }}"></script>
+{% endblock %}
