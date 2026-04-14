@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="dashboard-hero card">
+    <div>
+        <p class="eyebrow">WELCOME BACK</p>
+        <h2>Interview Performance Dashboard</h2>
+        <p class="subtle">Track your growth, improve weak areas, and push your hire probability higher every session.</p>
+        <div class="hero-actions">
+            <a class="btn primary" href="{{ url_for('start_interview') }}">Start New Interview</a>
+            <a class="btn ghost" href="{{ url_for('history') }}">View Full History</a>
+        </div>
+    </div>
+    <div class="hero-score">
+        <span>Current Level</span>
+        <p>Level {{ current_user.level }}</p>
+        <small>{{ current_user.points }} total points</small>
+    </div>
+</section>
+
+<section class="grid cards-4 dashboard-stats">
+    <article class="card stat-card stat-score">
+        <small>Average Score</small>
+        <p class="metric">{{ avg_score }}%</p>
+        <span>Across all completed interviews</span>
+    </article>
+    <article class="card stat-card stat-hire">
+        <small>Hire Probability</small>
+        <p class="metric">{{ avg_hire }}%</p>
+        <span>Estimated from answer quality trends</span>
+    </article>
+    <article class="card stat-card stat-level">
+        <small>Total Sessions</small>
+        <p class="metric">{{ completed_sessions|length }}</p>
+        <span>Completed mock interviews</span>
+    </article>
+    <article class="card stat-card stat-badge">
+        <small>Badges Unlocked</small>
+        <p class="metric">{{ badges|length }}</p>
+        <span>Achievements earned</span>
+    </article>
+</section>
+
+<section class="card performance-panel">
+    <div class="card-head">
+        <h3>Performance Timeline</h3>
+        <span class="pill">Last {{ progress_scores|length if progress_scores else 0 }} sessions</span>
+    </div>
+    {% if progress_scores %}
+        <div id="progress-chart" data-labels='{{ progress_labels|tojson }}' data-scores='{{ progress_scores|tojson }}'></div>
+    {% else %}
+        <p>No completed interviews yet. Start one to see analytics.</p>
+    {% endif %}
+</section>
+
+<section class="grid cards-2">
+    <article class="card table-card">
+        <h3>Recent Sessions</h3>
+        {% if recent_sessions %}
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Score</th>
+                    <th>Hire %</th>
+                    <th>Date</th>
+                </tr>
+                {% for s in recent_sessions %}
+                <tr>
+                    <td>{{ s.interview_type|capitalize }}</td>
+                    <td>{{ s.total_score }}%</td>
+                    <td>{{ s.hire_probability }}%</td>
+                    <td>{{ s.end_time.strftime('%d %b %Y') }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No interview history yet.</p>
+        {% endif %}
+    </article>
+
+    <article class="card">
+        <h3>Achievements</h3>
+        {% if badges %}
+            <div class="badge-list">
+                {% for badge in badges %}
+                <div class="badge-item">
+                    <strong>{{ badge.title }}</strong>
+                    <span>{{ badge.description }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No badges unlocked yet.</p>
+        {% endif %}
+    </article>
+</section>
+
+<section class="grid cards-2">
+    <article class="card">
+        <h3>Mistake Memory System</h3>
+        {% if recurring_weaknesses %}
+            <ul>
+                {% for weakness, count in recurring_weaknesses %}
+                <li>{{ weakness }} <span class="pill">Seen {{ count }}x</span></li>
+                {% endfor %}
+            </ul>
+            <p class="subtle">These repeated issues are tracked so you can focus on high-impact improvement areas.</p>
+        {% else %}
+            <p>No recurring mistakes detected yet. Complete interviews to build your memory profile.</p>
+        {% endif %}
+    </article>
+    <article class="card">
+        <h3>Interview Intelligence</h3>
+        <ul>
+            <li>Personality-based interviewer behavior is active in each session.</li>
+            <li>Hire probability is computed in final reports from overall performance.</li>
+            <li>Think-time and fluency patterns are included in scoring feedback.</li>
+            <li>Gamification keeps progress with levels, points, and badges.</li>
+        </ul>
+    </article>
+</section>
+{% endblock %}
